@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Heritage Trail Tours - MVP
 
-## Getting Started
+Production-ready startup MVP focused on a single conversion loop:
 
-First, run the development server:
+1. Discover tour
+2. Submit booking request
+3. Continue on WhatsApp
+4. Admin follows up and updates booking status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 1) Architecture
+
+- **Runtime**: Next.js App Router (single app, no separate backend service)
+- **Data access**: Drizzle ORM + PostgreSQL (Neon-ready)
+- **Validation**: Zod (server + form contracts)
+- **Forms**: React Hook Form + Server Actions
+- **Animations**: Framer Motion (progressive reveal)
+- **Admin protection**: Middleware gate using `ADMIN_SECRET`
+- **API surface**: Route Handlers for headless reads (`/api/tours`, `/api/bookings`)
+
+### Request flow
+
+- User opens `tours/[tourId]`
+- `BookingForm` posts to `createBookingAction`
+- Action validates and writes booking with status `PENDING`
+- Action builds WhatsApp deep link with booking reference
+- User lands on success page and taps WhatsApp CTA
+
+## 2) Folder Structure
+
+```txt
+src/
+  actions/
+    admin.ts
+    booking.ts
+  app/
+    about/page.tsx
+    admin/bookings/page.tsx
+    api/
+      bookings/route.ts
+      tours/route.ts
+    booking/success/page.tsx
+    custom-travel/page.tsx
+    tours/
+      [tourId]/page.tsx
+      page.tsx
+    layout.tsx
+    page.tsx
+  components/
+    motion/fade-in.tsx
+    site/header.tsx
+    tours/booking-form.tsx
+  db/
+    client.ts
+    schema.ts
+  lib/
+    bookings.ts
+    env.ts
+    tours.ts
+    whatsapp.ts
+  middleware.ts
+drizzle.config.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 3) Database Schema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Implemented in `src/db/schema.ts`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **tours**
+  - `id`, `title`, `description`, `itinerary`, `price`, `duration`, `category`, `country`, `imageUrl`, `featured`, `createdAt`
+- **bookings**
+  - `id`, `name`, `email`, `phone`, `tourId` (nullable for custom requests), `travelersCount`, `preferences`, `isCustom`, `status`, `followUpNotes`, `createdAt`
+  - `status` enum: `PENDING | CONTACTED | CONFIRMED | CANCELLED`
+- **site_settings**
+  - `whatsappNumber`, `contactEmail`, `updatedAt`
+- **blog_posts** (post-MVP content readiness)
+  - `title`, `slug`, `body`, `coverImageUrl`, `published`
+- **testimonials**
+  - `travelerName`, `quote`, `location`, `published`
 
-## Learn More
+## 4) API Endpoints
 
-To learn more about Next.js, take a look at the following resources:
+- `GET /api/tours?country=&category=`
+  - Returns filtered tour list
+- `GET /api/bookings`
+  - Returns booking rows for admin integrations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Primary write operations are handled by **Server Actions**:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `createBookingAction` in `src/actions/booking.ts`
+- `updateBookingStatusAction` in `src/actions/admin.ts`
 
-## Deploy on Vercel
+## 5) UI Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/` homepage with value prop + featured tours
+- `/tours` filter-ready listing
+- `/tours/[tourId]` detail + booking request form
+- `/booking/success` submission confirmation + WhatsApp deep link
+- `/custom-travel` bespoke trip intake
+- `/admin/bookings` CRM-lite booking dashboard with status updates
+- `/about` trust/storytelling page
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 6) Environment Variables
+
+Create `.env.local`:
+
+```bash
+DATABASE_URL=postgres://...
+WHATSAPP_NUMBER=233200000000
+SITE_EMAIL=hello@heritagetrailtours.com
+ADMIN_SECRET=replace-with-strong-secret
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+## 7) Run Locally
+
+```bash
+npm install
+npm run dev
+```
+
+Optional DB migration flow:
+
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+Open:
+
+- Public app: `http://localhost:3000`
+- Admin: `http://localhost:3000/admin/bookings?adminKey=YOUR_ADMIN_SECRET`
+
+## 8) Scalability Notes
+
+- Keep writes in Server Actions for low-latency vertical slices.
+- Split `lib/*` read models from write actions to ease future service extraction.
+- Route Handlers already provide a lightweight API layer for mobile or partner channels.
+- Schema includes CMS-related tables (`blog_posts`, `testimonials`, `site_settings`) to ship post-MVP features without redesigning data contracts.

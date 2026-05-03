@@ -1,0 +1,80 @@
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+
+export const bookingStatusEnum = pgEnum("booking_status", [
+  "PENDING",
+  "CONTACTED",
+  "CONFIRMED",
+  "CANCELLED",
+]);
+
+export const tours = pgTable("tours", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description").notNull(),
+  itinerary: text("itinerary").notNull(),
+  price: varchar("price", { length: 100 }).notNull(),
+  duration: varchar("duration", { length: 80 }).notNull(),
+  category: varchar("category", { length: 80 }).notNull(),
+  country: varchar("country", { length: 80 }).notNull(),
+  imageUrl: text("image_url"),
+  featured: boolean("featured").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const bookings = pgTable("bookings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 120 }).notNull(),
+  email: varchar("email", { length: 200 }).notNull(),
+  phone: varchar("phone", { length: 40 }).notNull(),
+  tourId: uuid("tour_id").references(() => tours.id, { onDelete: "restrict" }),
+  travelersCount: integer("travelers_count").notNull(),
+  preferences: text("preferences"),
+  isCustom: boolean("is_custom").default(false).notNull(),
+  status: bookingStatusEnum("status").default("PENDING").notNull(),
+  followUpNotes: text("follow_up_notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const siteSettings = pgTable("site_settings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  whatsappNumber: varchar("whatsapp_number", { length: 40 }).notNull(),
+  contactEmail: varchar("contact_email", { length: 200 }).notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const blogPosts = pgTable("blog_posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: varchar("title", { length: 200 }).notNull(),
+  slug: varchar("slug", { length: 220 }).unique().notNull(),
+  body: text("body").notNull(),
+  coverImageUrl: text("cover_image_url"),
+  published: boolean("published").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const testimonials = pgTable("testimonials", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  travelerName: varchar("traveler_name", { length: 120 }).notNull(),
+  quote: text("quote").notNull(),
+  location: varchar("location", { length: 140 }),
+  published: boolean("published").default(true).notNull(),
+});
+
+export const bookingsRelations = relations(bookings, ({ one }) => ({
+  tour: one(tours, {
+    fields: [bookings.tourId],
+    references: [tours.id],
+  }),
+}));
+
+export type BookingStatus = (typeof bookingStatusEnum.enumValues)[number];

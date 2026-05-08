@@ -8,6 +8,13 @@
       "when": 1777827352515,
       "tag": "0000_lying_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777847403058,
+      "tag": "0001_clear_hellcat",
+      "breakpoints": true
     }
   ]
 }

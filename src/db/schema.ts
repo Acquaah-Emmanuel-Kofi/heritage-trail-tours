@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   text,
@@ -15,6 +16,12 @@ export const bookingStatusEnum = pgEnum("booking_status", [
   "CONTACTED",
   "CONFIRMED",
   "CANCELLED",
+]);
+
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "PENDING",
+  "PAID",
+  "ON_ARRIVAL",
 ]);
 
 export const tours = pgTable("tours", {
@@ -42,6 +49,28 @@ export const bookings = pgTable("bookings", {
   isCustom: boolean("is_custom").default(false).notNull(),
   status: bookingStatusEnum("status").default("PENDING").notNull(),
   followUpNotes: text("follow_up_notes"),
+  emergencyContactName: varchar("emergency_contact_name", { length: 120 }),
+  emergencyContactPhone: varchar("emergency_contact_phone", { length: 40 }),
+  guests: jsonb("guests").$type<{ name: string; age?: number; gender?: string; nationality?: string; passportNumber?: string; occupation?: string; }[]>(),
+  arrivalDate: timestamp("arrival_date"),
+  departureDate: timestamp("departure_date"),
+  flightDetails: text("flight_details"),
+  accommodationAddress: text("accommodation_address"),
+  pickupLocation: text("pickup_location"),
+  preferredTourDate: timestamp("preferred_tour_date"),
+  privateTour: boolean("private_tour").default(false),
+  specialInterests: text("special_interests"),
+  medicalConditions: text("medical_conditions"),
+  dietaryRestrictions: text("dietary_restrictions"),
+  physicalLimitations: text("physical_limitations"),
+  specialAssistance: text("special_assistance"),
+  paymentStatus: paymentStatusEnum("payment_status").default("PENDING"),
+  paymentId: varchar("payment_id", { length: 100 }),
+  paymentAmount: integer("payment_amount"),
+  paymentMethod: varchar("payment_method", { length: 50 }),
+  promoCode: varchar("promo_code", { length: 50 }),
+  termsAgreed: boolean("terms_agreed").default(false),
+  mediaConsent: boolean("media_consent").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

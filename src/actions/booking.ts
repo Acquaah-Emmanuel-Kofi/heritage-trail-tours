@@ -66,7 +66,7 @@ export async function createBookingAction(formData: FormData) {
     emergencyContactName, emergencyContactPhone, guests, arrivalDate, departureDate,
     flightDetails, accommodationAddress, pickupLocation, preferredTourDate, privateTour,
     specialInterests, medicalConditions, dietaryRestrictions, physicalLimitations, specialAssistance,
-    paymentOption, promoCode, paymentId, paymentAmount, paymentMethod,
+    paymentOption, promoCode, termsAgreed, mediaConsent
   } = parsed.data;
 
   let bookingId = crypto.randomUUID();
@@ -93,12 +93,9 @@ export async function createBookingAction(formData: FormData) {
         preferredTourDate,
         privateTour,
         paymentStatus: paymentOption === 'pay_now' ? 'PAID' : 'ON_ARRIVAL',
-        paymentId,
-        paymentAmount,
-        paymentMethod,
         promoCode,
-        termsAgreed: true,
-        mediaConsent: parsed.data.mediaConsent,
+        termsAgreed: termsAgreed,
+        mediaConsent: mediaConsent,
       })
       .returning({ id: bookings.id });
     bookingId = created.id;

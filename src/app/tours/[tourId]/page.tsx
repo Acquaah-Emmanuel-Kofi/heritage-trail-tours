@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site/header";
-import { BookingForm } from "@/components/tours/booking-form";
+import { BookingWizard } from "@/components/booking/BookingWizard";
 import { getTourById } from "@/lib/tours";
 
 type Props = {
@@ -29,7 +29,7 @@ export default async function TourDetailPage({ params }: Props) {
         </section>
         <section>
           <h2 className="mb-3 text-xl font-semibold">Request Booking</h2>
-          <BookingForm tourId={tour.id} tourName={tour.title} />
+          <BookingWizard tourId={tour.id} tourName={tour.title} />
         </section>
       </main>
     </div>

@@ -1,5 +1,5 @@
 import { SiteHeader } from "@/components/site/header";
-import { BookingForm } from "@/components/tours/booking-form";
+import { BookingWizard } from "@/components/booking/BookingWizard";
 
 export default function CustomTravelPage() {
   return (
@@ -11,7 +11,7 @@ export default function CustomTravelPage() {
           Tell us what kind of heritage journey you want and we will tailor it for your group.
         </p>
         <div className="mt-6">
-          <BookingForm tourId="" tourName="Custom Heritage Trip" isCustom />
+          <BookingWizard tourId="" tourName="Custom Heritage Trip" isCustom={true} />
         </div>
       </main>
     </div>

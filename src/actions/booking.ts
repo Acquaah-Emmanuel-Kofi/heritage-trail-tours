@@ -103,7 +103,7 @@ export async function createBookingAction(formData: FormData) {
     // Non-blocking fallback for environments without DB during early setup.
   }
 
-  const whatsappLink = getWhatsappDeepLink({ tourName, bookingId, name });
+  const whatsappLink = await getWhatsappDeepLink({ tourName, bookingId, name });
   revalidatePath("/admin");
   redirect(`/booking/success?bookingId=${bookingId}&tourName=${encodeURIComponent(tourName)}&wa=${encodeURIComponent(whatsappLink)}`);
 }

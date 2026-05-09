@@ -99,6 +99,13 @@ export const testimonials = pgTable("testimonials", {
   published: boolean("published").default(true).notNull(),
 });
 
+export const galleryImages = pgTable("gallery_images", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  imageUrl: text("image_url").notNull(),
+  caption: varchar("caption", { length: 240 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const bookingsRelations = relations(bookings, ({ one }) => ({
   tour: one(tours, {
     fields: [bookings.tourId],

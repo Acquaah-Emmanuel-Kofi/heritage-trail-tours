@@ -27,3 +27,25 @@ export async function updateBookingStatusAction(formData: FormData) {
 
   revalidatePath("/admin/bookings");
 }
+
+const notesSchema = z.object({
+  bookingId: z.string().uuid(),
+  followUpNotes: z.string().max(3000).optional(),
+});
+
+export async function updateBookingNotesAction(formData: FormData) {
+  const raw = Object.fromEntries(formData.entries());
+  const parsed = notesSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return;
+  }
+
+  const db = getDb();
+  await db
+    .update(bookings)
+    .set({ followUpNotes: parsed.data.followUpNotes || null })
+    .where(eq(bookings.id, parsed.data.bookingId));
+
+  revalidatePath("/admin/bookings");
+}

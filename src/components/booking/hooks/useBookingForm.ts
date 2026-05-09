@@ -39,13 +39,16 @@ export const initialFormData: BookingFormData = {
   mediaConsent: false
 }
 
-export const useBookingForm = (tourId?: string, tourName?: string, isCustom?: boolean) => {
+export const useBookingForm = (tourId?: string) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(fullBookingSchema),
-    defaultValues: initialFormData
+    defaultValues: {
+      ...initialFormData,
+      tourId: tourId ?? '',
+    }
   });
 
   const nextStep = async () => {

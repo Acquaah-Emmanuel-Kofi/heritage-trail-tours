@@ -9,6 +9,28 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { BookingFormData } from '../types';
 
+type PaystackSetupArgs = {
+  key: string | undefined;
+  email: string;
+  amount: number;
+  currency: string;
+  ref: string;
+  onClose: () => void;
+  callback: (_response: unknown) => void;
+};
+
+type PaystackHandler = {
+  openIframe: () => void;
+};
+
+type PaystackPopType = {
+  setup: (args: PaystackSetupArgs) => PaystackHandler;
+};
+
+type WindowWithPaystack = Window & {
+  PaystackPop?: PaystackPopType;
+};
+
 export const PaymentForm = () => {
   const { register, setValue, watch } = useFormContext<BookingFormData>();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -18,7 +40,7 @@ export const PaymentForm = () => {
     if (paymentOption === 'pay_now') {
       setIsProcessing(true);
       // Paystack integration
-      const PaystackPop = (window as unknown as { PaystackPop: { setup: (args: any) => any } }).PaystackPop;
+      const PaystackPop = (window as WindowWithPaystack).PaystackPop;
       if (PaystackPop) {
         const handler = PaystackPop.setup({
           key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
@@ -29,7 +51,7 @@ export const PaymentForm = () => {
           onClose: () => {
             setIsProcessing(false);
           },
-          callback: (response: unknown) => {
+          callback: () => {
             // setValue('paymentId', response.reference);
             // setValue('paymentAmount', 50000);
             // setValue('paymentMethod', 'card');

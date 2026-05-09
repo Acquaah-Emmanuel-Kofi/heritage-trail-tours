@@ -11,7 +11,7 @@ export default function CustomTravelPage() {
           Tell us what kind of heritage journey you want and we will tailor it for your group.
         </p>
         <div className="mt-6">
-          <BookingWizard tourId="" tourName="Custom Heritage Trip" isCustom={true} />
+          <BookingWizard tourName="Custom Heritage Trip" isCustom />
         </div>
       </main>
     </div>

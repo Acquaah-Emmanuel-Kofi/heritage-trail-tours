@@ -23,8 +23,8 @@ interface BookingWizardProps {
   isCustom?: boolean;
 }
 
-export const BookingWizard = ({ tourId, tourName, isCustom = false }: BookingWizardProps) => {
-  const { form, currentStep, totalSteps, nextStep, prevStep } = useBookingForm(tourId, tourName, isCustom);
+export const BookingWizard = ({ tourId, tourName = "Custom Heritage Trip", isCustom = false }: BookingWizardProps) => {
+  const { form, currentStep, totalSteps, nextStep, prevStep } = useBookingForm(tourId);
 
   const CurrentStepComponent = steps[currentStep - 1].component;
 
@@ -39,6 +39,9 @@ export const BookingWizard = ({ tourId, tourName, isCustom = false }: BookingWiz
         }
       }
     });
+    formData.append("tourId", tourId ?? "");
+    formData.append("tourName", tourName);
+    formData.append("isCustom", String(isCustom));
     await createBookingAction(formData);
   });
 

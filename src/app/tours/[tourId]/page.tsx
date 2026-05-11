@@ -197,7 +197,7 @@ export default async function TourDetailPage({ params }: Props) {
                   <CardHeader>
                     <CardTitle>Ready to Explore?</CardTitle>
                     <CardDescription>
-                      Fill out the form and we'll follow up via WhatsApp within 24 hours
+                      Fill out the form and we&apos;ll follow up via WhatsApp within 24 hours
                     </CardDescription>
                   </CardHeader>
                   <CardContent id="booking">

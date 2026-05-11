@@ -300,7 +300,7 @@ export default async function Home() {
                     <CardContent className="p-6">
                       <MessageCircle className="h-8 w-8 text-primary mb-4 opacity-50" />
                       <blockquote className="text-foreground mb-6 leading-relaxed">
-                        "{testimonial.quote}"
+                        &quot;{testimonial.quote}&quot;
                       </blockquote>
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -366,7 +366,7 @@ export default async function Home() {
       )}
 
       {/* CTA Section */}
-      <section className="relative px-4 py-20 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20">
+      <section className="relative px-4 py-20 sm:px-6 lg:px-8 bg-linear-to-br from-primary/20 via-secondary/20 to-accent/20">
         <div className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm" />
         </div>
@@ -376,7 +376,7 @@ export default async function Home() {
               Ready to Start Your Heritage Journey?
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Choose a curated tour or create your own custom adventure. We'll handle the details and keep you updated every step of the way.
+              Choose a curated tour or create your own custom adventure. We&apos;ll handle the details and keep you updated every step of the way.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="group">

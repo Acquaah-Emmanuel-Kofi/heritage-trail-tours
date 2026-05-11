@@ -148,7 +148,7 @@ export const BookingWizard = ({ tourId, tourName = "Custom Heritage Trip", isCus
 
         {/* Help Text */}
         <p className="mt-4 text-xs text-muted-foreground text-center">
-          We'll follow up via WhatsApp within 24 hours to confirm your booking details.
+          We&apos;ll follow up via WhatsApp within 24 hours to confirm your booking details.
         </p>
       </div>
     </FormProvider>

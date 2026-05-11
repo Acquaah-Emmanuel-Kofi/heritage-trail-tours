@@ -80,7 +80,7 @@ export default async function SuccessPage({ searchParams }: Props) {
                 Booking Request Submitted!
               </h1>
               <p className="text-lg text-muted-foreground">
-                Thank you for choosing Heritage Trail Tours. We'll be in touch shortly with the next steps.
+                Thank you for choosing Heritage Trail Tours. We&apos;ll be in touch shortly with the next steps.
               </p>
             </div>
           </FadeIn>

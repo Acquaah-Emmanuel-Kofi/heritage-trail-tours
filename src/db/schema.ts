@@ -78,6 +78,11 @@ export const siteSettings = pgTable("site_settings", {
   id: uuid("id").primaryKey().defaultRandom(),
   whatsappNumber: varchar("whatsapp_number", { length: 40 }).notNull(),
   contactEmail: varchar("contact_email", { length: 200 }).notNull(),
+  youtubeUrl: varchar("youtube_url", { length: 500 }),
+  facebook: varchar("facebook", { length: 500 }),
+  instagram: varchar("instagram", { length: 500 }),
+  tiktok: varchar("tiktok", { length: 500 }),
+  phone: varchar("phone", { length: 40 }),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
@@ -103,6 +108,16 @@ export const galleryImages = pgTable("gallery_images", {
   id: uuid("id").primaryKey().defaultRandom(),
   imageUrl: text("image_url").notNull(),
   caption: varchar("caption", { length: 240 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const emailLogs = pgTable("email_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  recipient: varchar("recipient", { length: 200 }).notNull(),
+  type: varchar("type", { length: 50 }).notNull(), // 'booking_created', 'booking_status_changed', 'blog_published'
+  subject: varchar("subject", { length: 200 }).notNull(),
+  success: boolean("success").default(true).notNull(),
+  error: text("error"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

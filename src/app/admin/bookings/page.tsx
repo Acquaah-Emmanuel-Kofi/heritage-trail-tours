@@ -116,12 +116,18 @@ export default async function AdminBookingsPage({ searchParams }: Props) {
                 </td>
                 <td className="px-3 py-3">{new Date(booking.createdAt).toLocaleDateString()}</td>
                 <td className="px-3 py-3">
-                  <a
-                    href={whatsappLink}
-                    className="text-emerald-300 underline"
-                  >
-                    Open
-                  </a>
+                  {whatsappLink ? (
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-300 underline"
+                    >
+                      Open
+                    </a>
+                  ) : (
+                    <span className="text-slate-400 text-sm">Not configured</span>
+                  )}
                 </td>
                 <td className="px-3 py-3">
                   <form action={updateBookingNotesAction} className="space-y-2">

@@ -94,12 +94,20 @@ export const PaymentForm = () => {
       <Input {...register('promoCode')} placeholder="Promo Code (optional)" />
 
       <div className="flex items-center space-x-2">
-        <Checkbox {...register('termsAgreed')} />
+          <Checkbox
+            id="termsAgreed"
+            checked={watch('termsAgreed')}
+            onCheckedChange={(checked) => setValue('termsAgreed', !!checked)}
+          />
         <Label>I agree to the Terms & Conditions</Label>
       </div>
 
       <div className="flex items-center space-x-2">
-        <Checkbox {...register('mediaConsent')} />
+        <Checkbox
+          id="mediaConsent"
+          checked={watch('mediaConsent')}
+          onCheckedChange={(checked) => setValue('mediaConsent', !!checked)}
+        />
         <Label>I consent to media usage</Label>
       </div>
     </div>

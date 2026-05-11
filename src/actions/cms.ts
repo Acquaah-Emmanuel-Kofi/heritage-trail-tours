@@ -6,6 +6,10 @@ import { z } from "zod";
 import { getDb } from "@/db/client";
 import { blogPosts, galleryImages, testimonials } from "@/db/schema";
 import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { getEmailService } from "@/lib/email";
+import { getSiteSettings } from "@/lib/site-settings";
+import { blogPublishedEmail } from "@/lib/email-templates/blog";
+import { logEmail } from "@/lib/email-logger";
 
 function slugify(input: string) {
   return input
@@ -48,7 +52,48 @@ export async function toggleBlogPublishedAction(formData: FormData) {
   if (!blogId) return;
 
   const db = getDb();
+
+  // Get blog details before update
+  const [blog] = await db
+    .select()
+    .from(blogPosts)
+    .where(eq(blogPosts.id, blogId))
+    .limit(1);
+
+  if (!blog) return;
+
+  // Update published status
   await db.update(blogPosts).set({ published: !published }).where(eq(blogPosts.id, blogId));
+
+  // Send email notification if blog was just published
+  if (!published && blog.published === false) {
+    const emailService = getEmailService();
+    const siteSettings = await getSiteSettings();
+
+    if (emailService && siteSettings) {
+      // For now, send to admin email as newsletter recipient
+      // In future, this could be expanded to a newsletter subscriber list
+      const newsletterEmail = blogPublishedEmail({
+        blogTitle: blog.title,
+        blogSlug: blog.slug,
+        blogExcerpt: blog.body.replace(/<[^>]*>/g, '').substring(0, 150) + '...',
+      });
+
+      const emailSent = await emailService.sendEmail(
+        siteSettings.contactEmail, // Could be newsletter list in future
+        newsletterEmail.subject,
+        newsletterEmail.html
+      );
+
+      await logEmail(
+        siteSettings.contactEmail,
+        'blog_published',
+        newsletterEmail.subject,
+        emailSent
+      );
+    }
+  }
+
   revalidatePath("/admin/cms/blog");
 }
 

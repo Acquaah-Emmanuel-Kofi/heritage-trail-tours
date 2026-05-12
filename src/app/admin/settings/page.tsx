@@ -46,6 +46,59 @@ export default async function AdminSettingsPage() {
             required
           />
         </label>
+        <label className="block">
+          <span className="mb-1 block text-sm">Contact Phone</span>
+          <input
+            name="phone"
+            defaultValue={settings?.phone ?? process.env.PHONE_NUMBER}
+            className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2"
+            placeholder="+1234567890"
+          />
+        </label>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Social Media Links</h3>
+          <label className="block">
+            <span className="mb-1 block text-sm">YouTube URL</span>
+            <input
+              name="youtubeUrl"
+              type="url"
+              defaultValue={settings?.youtubeUrl ?? process.env.YOUTUBE_URL}
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2"
+              placeholder="https://youtube.com/channel/..."
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-sm">Facebook URL</span>
+            <input
+              name="facebook"
+              type="url"
+              defaultValue={settings?.facebook ?? process.env.FACEBOOK_URL}
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2"
+              placeholder="https://facebook.com/..."
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-sm">Instagram URL</span>
+            <input
+              name="instagram"
+              type="url"
+              defaultValue={settings?.instagram ?? process.env.INSTAGRAM_URL}
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2"
+              placeholder="https://instagram.com/..."
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-sm">TikTok URL</span>
+            <input
+              name="tiktok"
+              type="url"
+              defaultValue={settings?.tiktok ?? process.env.TIKTOK_URL}
+              className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2"
+              placeholder="https://tiktok.com/@..."
+            />
+          </label>
+        </div>
 
         <fieldset className="space-y-2">
           <legend className="text-sm font-semibold">Homepage Featured Tours</legend>

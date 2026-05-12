@@ -4,6 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Heritage Trail Tours Design System */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -49,82 +50,157 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Backgrounds — warm-tinted neutrals from logo sky */
+  --background:          oklch(0.99 0.007 75);   /* #FFFAF6 Warm White */
+  --foreground:          oklch(0.13 0.03 65);    /* #1A1208 Palm Black */
+  --card:                oklch(0.97 0.015 70);   /* #FFF4EB Sand Haze  */
+  --card-foreground:     oklch(0.13 0.03 65);
+
+  /* Primary — Sunset Orange (dominant logo arc) */
+  --primary:             oklch(0.60 0.21 33);    /* #E8531A */
+  --primary-foreground:  oklch(1 0 0);
+
+  /* Secondary — Lagoon Cyan (water stripes) */
+  --secondary:           oklch(0.75 0.13 195);   /* #00C8D7 */
+  --secondary-foreground:oklch(0.13 0.03 65);
+
+  /* Accent — Golden Hour (sun halo glow) */
+  --accent:              oklch(0.77 0.17 74);    /* #F5A623 */
+  --accent-foreground:   oklch(0.13 0.03 65);
+
+  /* Muted neutrals */
+  --muted:               oklch(0.93 0.02 70);    /* #F0E8DF Driftwood */
+  --muted-foreground:    oklch(0.48 0.03 65);    /* #7A6B5D Bark      */
+  --border:              oklch(0.88 0.02 70);
+  --input:               oklch(0.95 0.01 70);
+  --ring:                oklch(0.60 0.21 33);
+
+  /* Semantic */
+  --destructive:         oklch(0.51 0.22 35);    /* Deep Coral */
+
+  /* Charts — logo color order */
+  --chart-1:             oklch(0.60 0.21 33);    /* Sunset Orange */
+  --chart-2:             oklch(0.75 0.13 195);   /* Lagoon Cyan   */
+  --chart-3:             oklch(0.77 0.17 74);    /* Golden Hour   */
+  --chart-4:             oklch(0.51 0.22 35);    /* Deep Coral    */
+  --chart-5:             oklch(0.60 0.10 200);   /* Deep Lagoon   */
+
+  /* Sidebar */
+  --sidebar:             oklch(0.97 0.015 70);
+  --sidebar-foreground:  oklch(0.13 0.03 65);
+  --sidebar-primary:     oklch(0.60 0.21 33);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent:      oklch(0.75 0.13 195);
+  --sidebar-accent-foreground:  oklch(0.13 0.03 65);
+  --sidebar-border:      oklch(0.88 0.02 70);
+  --sidebar-ring:        oklch(0.60 0.21 33);
+
+  --radius: 0.75rem;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Deep tropical night */
+  --background:          oklch(0.11 0.025 65);   /* #0D0A04 Deep Night */
+  --foreground:          oklch(0.96 0.008 70);   /* Warm off-white     */
+  --card:                oklch(0.16 0.025 65);   /* #1C1508 Dark Sand  */
+  --card-foreground:     oklch(0.96 0.008 70);
+
+  /* Brighter in dark — logo pops on dark bg */
+  --primary:             oklch(0.68 0.23 33);    /* #FF6B2E Ember      */
+  --primary-foreground:  oklch(0.11 0.025 65);
+  --secondary:           oklch(0.82 0.14 193);   /* #1FE0EF Elec. Lagoon */
+  --secondary-foreground:oklch(0.11 0.025 65);
+  --accent:              oklch(0.82 0.18 78);    /* #FFB840 Torch Gold */
+  --accent-foreground:   oklch(0.11 0.025 65);
+
+  --muted:               oklch(0.22 0.025 65);
+  --muted-foreground:    oklch(0.62 0.02 70);
+  --border:              oklch(0.28 0.025 65);
+  --input:               oklch(0.20 0.025 65);
+  --ring:                oklch(0.82 0.14 193);
+  --destructive:         oklch(0.65 0.22 35);
+
+  --chart-1:             oklch(0.68 0.23 33);
+  --chart-2:             oklch(0.82 0.14 193);
+  --chart-3:             oklch(0.82 0.18 78);
+  --chart-4:             oklch(0.65 0.22 35);
+  --chart-5:             oklch(0.65 0.12 198);
+
+  --sidebar:             oklch(0.14 0.025 65);
+  --sidebar-foreground:  oklch(0.96 0.008 70);
+  --sidebar-primary:     oklch(0.68 0.23 33);
+  --sidebar-primary-foreground: oklch(0.11 0.025 65);
+  --sidebar-accent:      oklch(0.82 0.14 193);
+  --sidebar-accent-foreground:  oklch(0.11 0.025 65);
+  --sidebar-border:      oklch(0.28 0.025 65);
+  --sidebar-ring:        oklch(0.82 0.14 193);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+  
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+  }
+  
+  /* Smooth transitions for theme switching */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground font-bold tracking-tight;
+  }
+  
+  /* Utility animations */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  @keyframes shimmer {
+    -100% {
+      background-position: 200% center;
+    }
+    100% {
+      background-position: -200% center;
+    }
   }
 }

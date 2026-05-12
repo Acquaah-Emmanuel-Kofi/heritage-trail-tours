@@ -4,6 +4,41 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BookingFormData } from '../types';
 import { fullBookingSchema } from '../utils/validation';
 
+const stepFieldMap = {
+  1: [
+    'travelersCount',
+    'arrivalDate',
+    'departureDate',
+    'flightDetails',
+    'accommodationAddress',
+    'pickupLocation',
+    'preferredTourDate',
+    'privateTour',
+  ] as Array<keyof BookingFormData>,
+  2: [
+    'name',
+    'email',
+    'phone',
+    'emergencyContactName',
+    'emergencyContactPhone',
+    'guests',
+  ] as Array<keyof BookingFormData>,
+  3: [
+    'specialInterests',
+    'medicalConditions',
+    'dietaryRestrictions',
+    'physicalLimitations',
+    'specialAssistance',
+    'preferences',
+  ] as Array<keyof BookingFormData>,
+  4: [
+    'paymentOption',
+    'promoCode',
+    'termsAgreed',
+    'mediaConsent',
+  ] as Array<keyof BookingFormData>,
+};
+
 export const initialFormData: BookingFormData = {
   // Step 1: Tour & Details
   tourId: '',
@@ -36,31 +71,41 @@ export const initialFormData: BookingFormData = {
   paymentOption: 'pay_now',
   promoCode: '',
   termsAgreed: false,
-  mediaConsent: false
-}
+  mediaConsent: false,
+};
 
 export const useBookingForm = (tourId?: string) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const totalSteps = 4;
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(fullBookingSchema),
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
     defaultValues: {
       ...initialFormData,
       tourId: tourId ?? '',
-    }
+    },
   });
 
   const nextStep = async () => {
-    // const isValid = await form.trigger(); // Trigger validation for current step
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+    const currentFields = stepFieldMap[1] ?? [];
+    const isValid = await form.trigger(currentFields);
+    if (!isValid) {
+      return false;
     }
+
+    if (currentStep < totalSteps) {
+      setCurrentStep((step) => step + 1);
+    }
+
+    return true;
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep((step) => step - 1);
     }
   };
 
@@ -77,5 +122,7 @@ export const useBookingForm = (tourId?: string) => {
     nextStep,
     prevStep,
     goToStep,
+    isSubmitting,
+    setIsSubmitting,
   };
 };

@@ -1,43 +1,61 @@
-import Link from "next/link";
-import { SiteHeader } from "@/components/site/header";
-import { listTours } from "@/lib/tours";
+import { MapPin, Clock, DollarSign, Filter, X } from "lucide-react"
+import Link from "next/link"
+import { SiteHeader } from "@/components/site/header"
+import { FadeIn } from "@/components/motion/fade-in"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { EmptyState } from "@/components/ui/empty-state"
+import { Breadcrumb } from "@/components/ui/breadcrumb"
+import { listTours } from "@/lib/tours"
+import { ToursGrid } from "@/components/tours/tours-grid"
 
-type Props = {
-  searchParams: Promise<{ country?: string; category?: string }>;
-};
-
-export default async function ToursPage({ searchParams }: Props) {
-  const params = await searchParams;
-  const tours = await listTours({
-    country: params.country,
-    category: params.category,
-  });
+export default async function ToursPage() {
+  const tours = await listTours()
 
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-6 py-10">
-        <h1 className="text-3xl font-bold">Tour Listing</h1>
-        <p className="mt-2 text-slate-300">Filter by country and category using query params.</p>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          {tours.map((tour) => (
-            <Link
-              key={tour.id}
-              href={`/tours/${tour.id}`}
-              className="rounded-xl border border-slate-800 bg-slate-900/60 p-4"
-            >
-              <p className="text-sm text-emerald-300">
-                {tour.country} · {tour.category}
-              </p>
-              <h2 className="mt-1 text-xl font-semibold">{tour.title}</h2>
-              <p className="mt-2 text-sm text-slate-300">{tour.description}</p>
-              <p className="mt-3 text-sm text-slate-400">
-                {tour.duration} · {tour.price}
-              </p>
-            </Link>
-          ))}
+
+      {/* Breadcrumb */}
+      <div className="border-b border-border/50 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Tours" }]} />
         </div>
-      </main>
+      </div>
+
+      {/* Header */}
+      <section className="px-4 py-12 sm:px-6 lg:px-8 bg-gradient-to-b from-primary/10 to-transparent">
+        <div className="mx-auto max-w-7xl">
+          <FadeIn>
+            <h1 className="text-4xl sm:text-5xl font-bold text-foreground">
+              Explore Our Tours
+            </h1>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
+              Discover handpicked heritage destinations across Africa. Each tour is designed to offer authentic cultural immersion and unforgettable memories.
+            </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Tours Grid with Client-side Filters */}
+      <section className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          {tours.length > 0 ? (
+            <ToursGrid tours={tours} />
+          ) : (
+            <EmptyState
+              icon={MapPin}
+              title="No Tours Available"
+              description="Check back soon for new heritage tours."
+              action={{
+                label: "Back to Home",
+                href: "/",
+              }}
+            />
+          )}
+        </div>
+      </section>
     </div>
-  );
+  )
 }

@@ -108,7 +108,7 @@ DATABASE_URL=postgres://...
 WHATSAPP_NUMBER=233200000000
 SITE_EMAIL=hello@heritagetrailtours.com
 ADMIN_SECRET=replace-with-strong-secret
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
 ## 7) Run Locally

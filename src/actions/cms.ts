@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDb } from "@/db/client";
 import { blogPosts, galleryImages, testimonials } from "@/db/schema";
-import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { getEmailService } from "@/lib/email";
 import { getSiteSettings } from "@/lib/site-settings";
 import { blogPublishedEmail } from "@/lib/email-templates/blog";
@@ -32,7 +32,8 @@ export async function createBlogPostAction(formData: FormData) {
   if (!parsed.success) return;
 
   const coverImageFile = formData.get("coverImage") as File | null;
-  const coverImageUrl = coverImageFile ? await uploadImageToCloudinary(coverImageFile) : null;
+  const coverImageResponse = coverImageFile ? await uploadToCloudinary(coverImageFile) : null;
+  const coverImageUrl = coverImageResponse?.secure_url || null;
 
   const db = getDb();
   await db.insert(blogPosts).values({
@@ -150,7 +151,8 @@ export async function uploadGalleryImageAction(formData: FormData) {
   const imageFile = formData.get("image") as File | null;
   if (!imageFile) return;
 
-  const imageUrl = await uploadImageToCloudinary(imageFile);
+  const imageResponse = await uploadToCloudinary(imageFile);
+  const imageUrl = imageResponse?.secure_url;
   if (!imageUrl) return;
 
   const db = getDb();

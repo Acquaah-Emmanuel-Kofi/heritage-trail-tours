@@ -1,51 +1,66 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import Link from "next/link"
-import { MapPin, Clock, DollarSign, Filter, X } from "lucide-react"
-import { FadeIn } from "@/components/motion/fade-in"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { EmptyState } from "@/components/ui/empty-state"
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import { MapPin, Clock, DollarSign, Filter, X } from "lucide-react";
+import { FadeIn } from "@/components/motion/fade-in";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { EmptyState } from "@/components/ui/empty-state";
+import Image from "next/image";
 
 interface Tour {
-  id: string
-  title: string
-  description: string
-  category: string
-  country: string
-  price: string
-  duration: string
-  imageUrl: string | null
-  featured?: boolean
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  country: string;
+  price: string;
+  duration: string;
+  imageUrl: string | null;
+  featured?: boolean;
 }
 
 interface ToursGridProps {
-  tours: Tour[]
+  tours: Tour[];
 }
 
 export function ToursGrid({ tours }: ToursGridProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   // Get unique categories and countries
-  const categories = useMemo(() => [...new Set(tours.map((t) => t.category))], [tours])
-  const countries = useMemo(() => [...new Set(tours.map((t) => t.country))], [tours])
+  const categories = useMemo(
+    () => [...new Set(tours.map((t) => t.category))],
+    [tours],
+  );
+  const countries = useMemo(
+    () => [...new Set(tours.map((t) => t.country))],
+    [tours],
+  );
 
   // Filter tours
   const filteredTours = useMemo(() => {
     return tours.filter((tour) => {
       const matchesSearch =
         tour.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tour.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = !selectedCategory || tour.category === selectedCategory
-      const matchesCountry = !selectedCountry || tour.country === selectedCountry
-      return matchesSearch && matchesCategory && matchesCountry
-    })
-  }, [tours, searchQuery, selectedCategory, selectedCountry])
+        tour.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory =
+        !selectedCategory || tour.category === selectedCategory;
+      const matchesCountry =
+        !selectedCountry || tour.country === selectedCountry;
+      return matchesSearch && matchesCategory && matchesCountry;
+    });
+  }, [tours, searchQuery, selectedCategory, selectedCountry]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-4">
@@ -142,9 +157,9 @@ export function ToursGrid({ tours }: ToursGridProps) {
               variant="outline"
               size="sm"
               onClick={() => {
-                setSearchQuery("")
-                setSelectedCategory(null)
-                setSelectedCountry(null)
+                setSearchQuery("");
+                setSelectedCategory(null);
+                setSelectedCountry(null);
               }}
               className="w-full"
             >
@@ -161,7 +176,8 @@ export function ToursGrid({ tours }: ToursGridProps) {
           <>
             <div className="mb-6 flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Showing {filteredTours.length} tour{filteredTours.length !== 1 ? "s" : ""}
+                Showing {filteredTours.length} tour
+                {filteredTours.length !== 1 ? "s" : ""}
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-2">
@@ -171,13 +187,15 @@ export function ToursGrid({ tours }: ToursGridProps) {
                     <Card className="h-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group overflow-hidden">
                       {tour.imageUrl && (
                         <div className="relative h-56 overflow-hidden bg-muted">
-                          <img
+                          <Image
                             src={tour.imageUrl}
                             alt={tour.title}
+                            width={400}
+                            height={300}
                             className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src =
-                                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e5e7eb' width='400' height='300'/%3E%3C/svg%3E"
+                                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e5e7eb' width='400' height='300'/%3E%3C/svg%3E";
                             }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent" />
@@ -185,7 +203,10 @@ export function ToursGrid({ tours }: ToursGridProps) {
                             <Badge variant="default">{tour.category}</Badge>
                           </div>
                           {tour.featured && (
-                            <Badge variant="accent" className="absolute top-3 left-3">
+                            <Badge
+                              variant="accent"
+                              className="absolute top-3 left-3"
+                            >
                               Featured
                             </Badge>
                           )}
@@ -196,9 +217,13 @@ export function ToursGrid({ tours }: ToursGridProps) {
                           <div className="flex-1">
                             <div className="flex items-center gap-1 mb-2">
                               <MapPin className="h-4 w-4 text-primary" />
-                              <span className="text-sm font-medium text-primary">{tour.country}</span>
+                              <span className="text-sm font-medium text-primary">
+                                {tour.country}
+                              </span>
                             </div>
-                            <CardTitle className="line-clamp-2">{tour.title}</CardTitle>
+                            <CardTitle className="line-clamp-2">
+                              {tour.title}
+                            </CardTitle>
                           </div>
                         </div>
                       </CardHeader>
@@ -230,20 +255,21 @@ export function ToursGrid({ tours }: ToursGridProps) {
           </>
         ) : (
           <EmptyState
-            icon={MapPin}
             title="No Tours Found"
             description="Try adjusting your filters or search query to find the perfect tour."
             action={{
               label: "Clear Filters",
               onClick: () => {
-                setSearchQuery("")
-                setSelectedCategory(null)
-                setSelectedCountry(null)
+                setSearchQuery("");
+                setSelectedCategory(null);
+                setSelectedCountry(null);
               },
             }}
-          />
+          >
+            <MapPin className="mb-4 h-12 w-12 text-muted-foreground" />
+          </EmptyState>
         )}
       </FadeIn>
     </div>
-  )
+  );
 }

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getDb } from "@/db/client";
 import { tours } from "@/db/schema";
-import { uploadImageToCloudinary } from "@/lib/cloudinary";
+import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
 
 const MAX_IMAGE_SIZE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -62,7 +62,8 @@ export async function createTourAction(formData: FormData) {
     }
 
     try {
-      imageUrl = await uploadImageToCloudinary(imageFile);
+      const uploadResponse = await uploadToCloudinary(imageFile);
+      imageUrl = uploadResponse?.secure_url || null;
     } catch {
       redirect("/admin/tours/new?error=image_upload");
     }
@@ -118,7 +119,12 @@ export async function updateTourAction(formData: FormData) {
     }
 
     try {
-      uploadedImageUrl = await uploadImageToCloudinary(imageFile);
+      // If there's an existing image, delete it before uploading the new one
+      if (parsed.data.existingImageUrl) {
+        await deleteFromCloudinary(parsed.data.existingImageUrl);
+      }
+      const uploadResponse = await uploadToCloudinary(imageFile);
+      uploadedImageUrl = uploadResponse?.secure_url || null;
     } catch {
       redirect(`/admin/tours/${raw.tourId}/edit?error=image_upload`);
     }
@@ -162,7 +168,13 @@ export async function deleteTourAction(formData: FormData) {
     return;
   }
 
+  // Delete tour image from Cloudinary if it exists
   const db = getDb();
+  const tour = await db.select().from(tours).where(eq(tours.id, parsed.data.tourId)).limit(1).then(res => res[0]);
+  if (tour?.imageUrl) {
+    await deleteFromCloudinary(tour.imageUrl);
+  }
+
   await db.delete(tours).where(eq(tours.id, parsed.data.tourId));
   revalidatePath("/admin/tours");
   revalidatePath("/tours");

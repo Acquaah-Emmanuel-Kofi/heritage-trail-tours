@@ -10,6 +10,7 @@ import { Step2PersonalInfo } from './steps/Step2PersonalInfo';
 import { Step3Preferences } from './steps/Step3Preferences';
 import { Step4Payment } from './steps/Step4Payment';
 import { ChevronLeft, CheckCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 const steps = [
   { component: Step1TourDetails, title: 'Tour Details' },
@@ -31,33 +32,39 @@ export const BookingWizard = ({ tourId, tourName = "Custom Heritage Trip", isCus
   const progressPercent = (currentStep / totalSteps) * 100;
 
   const onSubmit = form.handleSubmit(
-  async (data) => {
-        try {
-      setIsSubmitting(true);
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          if (Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
-          } else {
-            formData.append(key, value.toString());
-          }
+    async (data) => {
+      try {
+        setIsSubmitting(true);
+        
+        // If pay_now is selected, payment is handled by Paystack
+        // The booking will be saved by the verify endpoint after successful payment
+        // For on_arrival, save the booking directly
+        if (data.paymentOption === 'on_arrival') {
+          const formData = new FormData();
+          Object.entries(data).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              if (Array.isArray(value)) {
+                formData.append(key, JSON.stringify(value));
+              } else {
+                formData.append(key, value.toString());
+              }
+            }
+          });
+          formData.append("tourId", tourId ?? "");
+          formData.append("tourName", tourName);
+          formData.append("isCustom", String(isCustom));
+          await createBookingAction(formData);
         }
-      });
-      formData.append("tourId", tourId ?? "");
-      formData.append("tourName", tourName);
-      formData.append("isCustom", String(isCustom));
-      await createBookingAction(formData);
-    } catch (error) {
-      console.error("Booking submission error:", error);
-      alert("Failed to submit booking. Please try again.");
-      setIsSubmitting(false);
+      } catch (error) {
+        console.error("Booking submission error:", error);
+        toast.error("An error occurred while submitting your booking. Please try again.");
+        setIsSubmitting(false);
+      }
+    },
+    (errors) => {
+      console.log("FORM ERRORS", errors);
     }
-  },
-  (errors) => {
-    console.log("FORM ERRORS", errors);
-  }
-);
+  );
 
   return (
     <FormProvider {...form}>

@@ -1,66 +1,41 @@
 'use client';
 
-import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { BookingFormData } from '../types';
-
-type PaystackSetupArgs = {
-  key: string | undefined;
-  email: string;
-  amount: number;
-  currency: string;
-  ref: string;
-  onClose: () => void;
-  callback: (_response: unknown) => void;
-};
-
-type PaystackHandler = {
-  openIframe: () => void;
-};
-
-type PaystackPopType = {
-  setup: (args: PaystackSetupArgs) => PaystackHandler;
-};
-
-type WindowWithPaystack = Window & {
-  PaystackPop?: PaystackPopType;
-};
+import { usePaystackPayment } from '../hooks/usePaystackPayment';
+import { toast } from 'sonner';
 
 export const PaymentForm = () => {
-  const { register, setValue, watch } = useFormContext<BookingFormData>();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const paymentOption = watch('paymentOption');
+  const form = useFormContext<BookingFormData>();
+  const { initiatePayment } = usePaystackPayment();
+  const paymentOption = form.watch('paymentOption');
+  const email = form.watch('email');
+  const termsAgreed = form.watch('termsAgreed');
 
   const handlePayment = async () => {
     if (paymentOption === 'pay_now') {
-      setIsProcessing(true);
-      // Paystack integration
-      const PaystackPop = (window as WindowWithPaystack).PaystackPop;
-      if (PaystackPop) {
-        const handler = PaystackPop.setup({
-          key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-          email: watch('email'),
-          amount: 50000, // Example amount in kobo (500 NGN)
-          currency: 'NGN',
-          ref: `ref_${Date.now()}`,
-          onClose: () => {
-            setIsProcessing(false);
-          },
-          callback: () => {
-            // setValue('paymentId', response.reference);
-            // setValue('paymentAmount', 50000);
-            // setValue('paymentMethod', 'card');
-            // Submit form
-            setIsProcessing(false);
-          },
-        });
-        handler.openIframe();
+      if (!termsAgreed) {
+        toast.error('Please agree to terms and conditions');
+        return;
       }
+      
+      if (!email) {
+        toast.error('Email is required for payment');
+        return;
+      }
+            
+      const metadata = {
+        email,
+        bookingRef: `BKG-${Date.now()}`,
+      };
+      
+      // Amount has to come from the the tour price, change it!!!
+      initiatePayment(email, 500, metadata);
     }
   };
 
@@ -68,48 +43,109 @@ export const PaymentForm = () => {
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Payment & Confirmation</h3>
 
-      <div>
-        <Label>Payment Option</Label>
-        <RadioGroup
-          value={paymentOption}
-          onValueChange={(value) => setValue('paymentOption', value as 'pay_now' | 'on_arrival')}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="on_arrival" id="on_arrival" />
-            <Label htmlFor="on_arrival">Pay on Arrival</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="pay_now" id="pay_now" />
-            <Label htmlFor="pay_now">Pay Instantly (Deposit)</Label>
-          </div>
-        </RadioGroup>
-      </div>
+      <FormField
+        control={form.control}
+        name="paymentOption"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Payment Option <span className="text-red-500">*</span></FormLabel>
+            <FormControl>
+              <RadioGroup
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="on_arrival" id="on_arrival" />
+                  <label htmlFor="on_arrival" className="text-sm cursor-pointer">
+                    Pay on Arrival
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="pay_now" id="pay_now" />
+                  <label htmlFor="pay_now" className="text-sm cursor-pointer">
+                    Pay Instantly (Deposit - GHS 50)
+                  </label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       {paymentOption === 'pay_now' && (
-        <Button onClick={handlePayment} disabled={isProcessing}>
-          {isProcessing ? 'Processing...' : 'Pay Deposit'}
-        </Button>
+        <div className="bg-muted p-4 rounded-lg border border-border">
+          <p className="text-sm text-muted-foreground mb-4">
+            Secure deposit of GHS 50 via Paystack. The remaining balance will be paid upon arrival.
+          </p>
+          <Button onClick={handlePayment} className="w-full">
+            Proceed to Secure Payment
+          </Button>
+        </div>
       )}
 
-      <Input {...register('promoCode')} placeholder="Promo Code (optional)" />
+      <FormField
+        control={form.control}
+        name="promoCode"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Promo Code</FormLabel>
+            <FormControl>
+              <Input
+                placeholder="Enter promo code (if you have one)"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div className="flex items-center space-x-2">
-          <Checkbox
-            id="termsAgreed"
-            checked={watch('termsAgreed')}
-            onCheckedChange={(checked) => setValue('termsAgreed', !!checked)}
-          />
-        <Label>I agree to the Terms & Conditions</Label>
-      </div>
+      <FormField
+        control={form.control}
+        name="termsAgreed"
+        render={({ field }) => (
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+            <FormControl>
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+            <div className="space-y-1 leading-none">
+              <FormLabel className="cursor-pointer">
+                I agree to the Terms & Conditions <span className="text-red-500">*</span>
+              </FormLabel>
+              <p className="text-xs text-muted-foreground">
+                By proceeding, you agree to our booking terms and cancellation policy.
+              </p>
+            </div>
+          </FormItem>
+        )}
+      />
 
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="mediaConsent"
-          checked={watch('mediaConsent')}
-          onCheckedChange={(checked) => setValue('mediaConsent', !!checked)}
-        />
-        <Label>I consent to media usage</Label>
-      </div>
+      <FormField
+        control={form.control}
+        name="mediaConsent"
+        render={({ field }) => (
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+            <FormControl>
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+            <div className="space-y-1 leading-none">
+              <FormLabel className="cursor-pointer">
+                I consent to media usage
+              </FormLabel>
+              <p className="text-xs text-muted-foreground">
+                You allow us to use photos from your tour for promotional purposes.
+              </p>
+            </div>
+          </FormItem>
+        )}
+      />
     </div>
   );
 }

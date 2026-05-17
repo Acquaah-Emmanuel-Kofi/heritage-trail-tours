@@ -2,57 +2,117 @@
 
 import { useFormContext } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { BookingFormData } from '../types';
 
 export const Step3Preferences = () => {
-  const { register } = useFormContext<BookingFormData>();
+  const form = useFormContext<BookingFormData>();
 
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Preferences & Special Requirements</h3>
 
-      <div>
-        <Label htmlFor="specialInterests">Special Interests</Label>
-        <Textarea
-          id="specialInterests"
-          placeholder="e.g., History & Heritage, Culture & Traditions"
-          {...register('specialInterests')}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="specialInterests"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Special Interests</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="e.g., History & Heritage, Culture & Traditions, Photography"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div>
-        <Label htmlFor="medicalConditions">Medical Conditions (if any)</Label>
-        <Textarea id="medicalConditions" {...register('medicalConditions')} />
-      </div>
+      <FormField
+        control={form.control}
+        name="medicalConditions"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Medical Conditions (if any)</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Let us know about any health conditions we should be aware of"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div>
-        <Label htmlFor="dietaryRestrictions">Dietary Restrictions</Label>
-        <Textarea
-          id="dietaryRestrictions"
-          placeholder="e.g., Vegetarian, Vegan, Allergies"
-          {...register('dietaryRestrictions')}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="dietaryRestrictions"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Dietary Restrictions</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="e.g., Vegetarian, Vegan, Allergies, Gluten-free"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div>
-        <Label htmlFor="physicalLimitations">Physical Limitations</Label>
-        <Textarea
-          id="physicalLimitations"
-          placeholder="e.g., walking distance, mobility issues"
-          {...register('physicalLimitations')}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="physicalLimitations"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Physical Limitations</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="e.g., walking distance preferences, mobility issues"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div>
-        <Label htmlFor="specialAssistance">Special Assistance Required</Label>
-        <Textarea id="specialAssistance" {...register('specialAssistance')} />
-      </div>
+      <FormField
+        control={form.control}
+        name="specialAssistance"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Special Assistance Required</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Any special assistance you may need during the tour"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-      <div>
-        <Label htmlFor="preferences">Additional Notes or Questions</Label>
-        <Textarea id="preferences" {...register('preferences')} />
-      </div>
+      <FormField
+        control={form.control}
+        name="preferences"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Additional Notes or Questions</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Anything else we should know about your trip?"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };

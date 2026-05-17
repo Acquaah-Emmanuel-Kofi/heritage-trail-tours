@@ -36,7 +36,7 @@ export function blogPublishedEmail(data: {
 
           <p>We're excited to share this new perspective on African heritage and cultural experiences. Each story brings you closer to the authentic narratives that make our tours special.</p>
 
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://heritagetrailtours.com'}/blogs/${data.blogSlug}" class="button">
+          <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'https://heritage-trail-tours.vercel.app/'}/blogs/${data.blogSlug}" class="button">
             📖 Read the Full Story
           </a>
 

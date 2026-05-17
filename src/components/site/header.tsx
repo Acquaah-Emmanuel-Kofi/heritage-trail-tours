@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import Image from "next/image"
 
 const navItems = [
   { href: "/tours", label: "Explore Tours" },
@@ -31,8 +32,13 @@ export function SiteHeader() {
             href="/"
             className="flex items-center gap-2 font-bold text-xl text-foreground hover:text-primary transition-colors"
           >
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-sm font-bold">
-              HT
+            <div className="h-8 w-8 rounded-lg flex items-center justify-center">
+              <Image
+                src="/heritage-logo.svg"
+                alt="Heritage Trail Logo"
+                width={32}
+                height={32}
+              />
             </div>
             <span className="hidden sm:inline">Heritage Trail</span>
           </Link>

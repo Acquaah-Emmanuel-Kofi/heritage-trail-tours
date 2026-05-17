@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, MapPin, Users, Heart, MessageCircle, CheckCircle, Play, Phone, MessageSquare } from "lucide-react"
+import { ArrowRight, MapPin, Users, Heart, MessageCircle, Phone, MessageSquare } from "lucide-react"
 import { SiteHeader } from "@/components/site/header"
 import { FadeIn } from "@/components/motion/fade-in"
 import { listTours } from "@/lib/tours"
@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getYouTubeEmbedUrl } from "@/lib/youtube"
+import { FAQSection } from "@/components/home/FAQSection"
+import { NewsletterSection } from "@/components/home/NewsletterSection"
 
 export default async function Home() {
   const tours = await listTours()
@@ -20,7 +22,7 @@ export default async function Home() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      {/* Hero Section */}
+  {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
         {/* Gradient background elements */}
         <div className="absolute inset-0 -z-10">
@@ -394,6 +396,12 @@ export default async function Home() {
           </div>
         </FadeIn>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection />
+
+      {/* Newsletter Section */}
+      <NewsletterSection />
 
       {/* Footer */}
       <footer className="border-t border-border/50 bg-background px-4 py-12 sm:px-6 lg:px-8">

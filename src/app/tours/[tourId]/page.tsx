@@ -3,6 +3,7 @@ import { MapPin, Clock, Users, DollarSign, Lightbulb, MapPinIcon } from "lucide-
 import { SiteHeader } from "@/components/site/header"
 import { FadeIn } from "@/components/motion/fade-in"
 import { BookingWizard } from "@/components/booking/BookingWizard"
+import { ShareButtons } from "@/components/tours/ShareButtons"
 import { getTourById } from "@/lib/tours"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -45,6 +46,9 @@ export default async function TourDetailPage({ params }: Props) {
           />
         </div>
       </div>
+
+      {/* Share Buttons */}
+      <ShareButtons tourTitle={tour.title} />
 
       {/* Hero Image */}
       <section className="relative h-96 overflow-hidden bg-muted sm:h-[500px]">

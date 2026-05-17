@@ -34,19 +34,14 @@ export function usePaystackPayment() {
     }
 
     try {
-      // Ensure we're in a form context
-      const form = document.getElementById('checkout-form') as HTMLFormElement;
-      if (!form) {
-        toast.error('Form not found. Please refresh the page and try again.');
-        return;
-      }
-
       const handler = window.PaystackPop.setup({
         key: publicKey,
         email,
         amount: Math.round(Number(amount) * 100),
         currency: 'GHS',
-        metadata,
+        metadata: {
+          email,
+        },
         callback: (response: PaystackResponse) => {
           if (response.reference) {
             router.push(`/api/paystack/verify?reference=${response.reference}`);

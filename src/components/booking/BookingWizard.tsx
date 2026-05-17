@@ -55,7 +55,6 @@ export const BookingWizard = ({ tourId, tourName = "Custom Heritage Trip", isCus
           formData.append("isCustom", String(isCustom));
           await createBookingAction(formData);
         }
-        // For pay_now, Paystack payment flow handles the redirect to verify
       } catch (error) {
         console.error("Booking submission error:", error);
         toast.error("An error occurred while submitting your booking. Please try again.");
